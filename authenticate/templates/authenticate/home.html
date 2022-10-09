@@ -1,0 +1,33 @@
+{% extends 'authenticate/base.html' %} {% block content %}
+
+<h1>Home page</h1>
+
+{% if user.is_authenticated %}
+<p>Name: {{user.first_name}} {{ user.last_name}}</p>
+<p>Username: {{user.username}}</p>
+
+<p>Email: {{user.email}}</p>
+
+<form method="POST" action="">
+  {% csrf_token %}
+  <h1>Enter your Note</h1>
+  <br />
+  <textarea id="notes" name="note" rows="4" cols="50"></textarea>
+  <input type="submit" value="Add Note" class="btn btn-secondary" />
+</form>
+
+{% if notes %} {% for note in notes %}
+<textarea readonly id="notes" name="note" rows="4" cols="50">{{note}}</textarea>
+{% endfor %} {% endif %}
+<br />
+<label>
+  Play Wordle:
+  <a href="/wordle">Play</a>
+</label>
+<br />
+<label>
+  Play Tic Tac Toe:
+  <a href="/tictactoe">Play</a>
+</label>
+
+{% endif %} {% endblock %}

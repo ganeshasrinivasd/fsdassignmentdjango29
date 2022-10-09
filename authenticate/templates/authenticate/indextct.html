@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="icon" href="ico.jpg">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styletct.css">
+    <style>
+        * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Raleway", sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 28%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+html {
+  font-size: 16px;
+}
+
+.wrapper {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+.container {
+  width: 50vmin;
+  height: 50vmin;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2vmin;
+}
+
+.page-header {
+  text-align: center;
+  margin-top: 2.5%;
+  color: #fff;
+}
+
+.page-header span {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 15px;
+  border: 3px dotted black;
+}
+
+.button-option {
+  background: #ffffff;
+  height: 15vmin;
+  width: 15vmin;
+  border: none;
+  border-radius: 25%;
+  font-size: 12vmin;
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  transition: 0.5s;
+}
+
+.button-option:hover {
+  background-color: gold;
+  box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3);
+}
+
+.outside-button {
+  font-size: 1.3em;
+  padding: 1em;
+  border-radius: 8px;
+  background-color: #0a0027;
+  color: #ffffff;
+  border: none;
+  position: relative;
+  margin: 1.5em auto 0 auto;
+  display: block;
+}
+
+.outside-button a {
+  text-decoration: none;
+  color: #fff;
+}
+.outside-button:hover {
+  background-color: rgb(9, 221, 245);
+  border-radius: 90%;
+  box-shadow: 0 35px 35px rgba(0, 0, 0, 0.3);
+}
+
+.popup {
+  background: rgb(0, 212, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 212, 255, 1) 0%,
+    rgba(9, 9, 121, 1) 80%,
+    rgba(2, 0, 36, 1) 100%
+  );
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  display: flex;
+  z-index: 2;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1em;
+  font-size: 12vmin;
+}
+
+#new-game {
+  font-size: 0.6em;
+  padding: 0.5em 1em;
+  border-radius: 0.2em;
+  border: none;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 28%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  color: #fff;
+}
+
+#message {
+  color: #ffffff;
+  text-align: center;
+  font-size: 1em;
+}
+
+.popup.hide {
+  display: none;
+}
+
+    </style>
+</head>
+<body>
+    <h2 class="page-header">
+        <span>TIC TAC TOE </span>
+    </h2>
+    
+   <div class="wrapper">
+       <div class="container">
+           <button class="button-option"></button>
+           <button class="button-option"></button>
+           <button class="button-option"></button>
+           <button class="button-option"></button>
+           <button class="button-option"></button>
+           <button class="button-option"></button>
+           <button class="button-option"></button>
+           <button class="button-option"></button>
+           <button class="button-option"></button>
+       </div>
+       
+       <button id="restart" class="outside-button">Restart</button>
+       <button class="outside-button"><a href="/">Go to Profile</a></button>
+       
+   </div>
+   <div class="popup hide">
+       <p id="message">Temp Message</p>
+       <button id="new-game">New Game</button>
+   </div>
+    <script>
+        let btnRef = document.querySelectorAll(".button-option");
+let popupRef = document.querySelector(".popup");
+let newgameBtn = document.getElementById("new-game");
+let restartBtn = document.getElementById("restart");
+let msgRef = document.getElementById("message");
+let combination = [
+  [0, 1, 2],
+  [0, 3, 6],
+  [2, 5, 8],
+  [6, 7, 8],
+  [3, 4, 5],
+  [1, 4, 7],
+  [0, 4, 8],
+  [2, 4, 6],
+];
+let xTurn = true;
+let count = 0;
+
+const disable_button = () => {
+  btnRef.forEach((element) => (element.disabled = true));
+
+  popupRef.classList.remove("hide");
+};
+
+const enable_button = () => {
+  btnRef.forEach((element) => {
+    element.innerText = "";
+    element.disabled = false;
+  });
+
+  popupRef.classList.add("hide");
+};
+
+const winFunction = (letter) => {
+  disable_button();
+  if (letter == "X") {
+    msgRef.innerHTML = "Player <em>'X'</em>   WON";
+  } else {
+    msgRef.innerHTML = "Player <em>'O'</em>   WON";
+  }
+};
+
+const drawFunction = () => {
+  disable_button();
+  msgRef.innerHTML = "Well Played, Better Luck Next Time";
+};
+
+newgameBtn.addEventListener("click", () => {
+  count = 0;
+  enable_button();
+});
+restartBtn.addEventListener("click", () => {
+  count = 0;
+  enable_button();
+});
+
+const winChecker = () => {
+  for (let i of combination) {
+    let [element1, element2, element3] = [
+      btnRef[i[0]].innerText,
+      btnRef[i[1]].innerText,
+      btnRef[i[2]].innerText,
+    ];
+    if (element1 != "" && (element2 != "") & (element3 != "")) {
+      if (element1 == element2 && element2 == element3) {
+        winFunction(element1);
+      }
+    }
+  }
+};
+
+btnRef.forEach((element) => {
+  element.addEventListener("click", () => {
+    if (xTurn) {
+      xTurn = false;
+      element.innerText = "X";
+      element.disabled = true;
+    } else {
+      xTurn = true;
+      element.innerText = "O";
+      element.disabled = true;
+    }
+    count += 1;
+    if (count == 9) {
+      drawFunction();
+    }
+
+    winChecker();
+  });
+});
+
+window.onload = enable_button;
+
+    </script>
+</body>
+</html>
